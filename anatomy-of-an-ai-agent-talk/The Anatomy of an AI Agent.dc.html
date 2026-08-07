@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="./deck-stage.js"></script>
+  <script src="./image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #0B0B0D; }
+    * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    a { color: #FDB813; text-decoration: none; }
+    a:hover { color: #FF8A3D; }
+  </style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<!-- ============================= TITLE ============================= -->
+<section data-label="Title" data-speaker-notes="Opening slide. State the title, then the one-sentence promise: by the end, everyone in the room has hand-built an agent from bare Python." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;flex-direction:column;justify-content:center;padding:140px;overflow:hidden;">
+  <div style="position:absolute;top:-260px;right:-260px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle at 35% 35%, rgba(255,138,61,0.28), rgba(234,51,35,0.10) 45%, transparent 70%);"></div>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:56px;">
+    <img src="uploads/1736485378644.jpeg" alt="ML Kolkata" style="width:56px;height:56px;border-radius:12px;">
+    <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;letter-spacing:0.08em;color:#F0B429;text-transform:uppercase;">ML Kolkata</span>
+  </div>
+  <div style="font-size:24px;font-weight:600;letter-spacing:0.12em;color:#9A9AA0;text-transform:uppercase;margin-bottom:28px;">Hands-On Workshop &nbsp;·&nbsp; Agentic AI Connect</div>
+  <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:108px;line-height:1.05;color:#FFFFFF;margin:0 0 28px 0;max-width:1600px;">The Anatomy of<br>an AI Agent</h1>
+  <p style="font-size:30px;color:#9A9AA0;margin:0 0 56px 0;max-width:1100px;">Building one from scratch, live, in plain Python.</p>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <img src="uploads/speaker-photo.png" alt="Sitam Meur" style="width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+    <div>
+      <div style="font-size:28px;font-weight:600;color:#FFFFFF;">Sitam Meur</div>
+      <div style="font-size:24px;color:#9A9AA0;margin-top:4px;">AI Engineer @ Daily Dose of Data Science &nbsp;·&nbsp; Aug 8, 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= SPEAKER INTRO ========================== -->
+<section data-label="Speaker Intro" data-speaker-notes="Quick who-am-I. Keep it under a minute — the room came for the build, not the bio." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:140px;gap:120px;align-items:center;overflow:hidden;">
+  <div style="position:absolute;bottom:-420px;right:-380px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle at 60% 40%, rgba(240,180,41,0.12), rgba(234,51,35,0.05) 50%, transparent 72%);"></div>
+  <div style="flex:0 0 auto;width:280px;height:280px;border-radius:50%;overflow:hidden;flex-shrink:0;">
+    <img src="uploads/speaker-photo.png" alt="Sitam Meur" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+  <div style="flex:1;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.12em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Speaker</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:76px;color:#FFFFFF;margin:0 0 20px 0;">Sitam Meur</h2>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;">
+      <div style="font-size:26px;color:#E4E4E7;">AI Engineer @ Daily Dose of Data Science</div>
+      <div style="font-size:24px;color:#9A9AA0;">Organiser @ ML Kolkata &nbsp;·&nbsp; GSoC Mentor @ Uramaki Lab</div>
+    </div>
+    <p style="font-size:24px;line-height:1.6;color:#8A8A90;max-width:900px;margin:0;">Off duty: cheering for Real Madrid and Mohun Bagan.</p>
+  </div>
+</section>
+
+<!-- ========================= SECTION 01: MODEL ====================== -->
+<section data-label="01 Model" data-speaker-notes="Prove statelessness live if time allows: run the sanity-check cell, then a fresh call asking what number was just computed. The model has no idea — that's the whole point." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:0 0 640px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 01 &nbsp;·&nbsp; Model</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">The model is not the agent</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Takes text in, produces text out. Nothing more.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>No memory between calls, no loop that keeps it running.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Can express the <em>intent</em> to call a tool, but can't act on it.
+      </li>
+    </ul>
+  </div>
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">model_call.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;">response = client.chat.completions.<span style="color:#7FD1FF;">create</span>(
+    model=MODEL,
+    messages=[{<span style="color:#FF9E7D;">"role"</span>: <span style="color:#FF9E7D;">"user"</span>, <span style="color:#FF9E7D;">"content"</span>: <span style="color:#FF9E7D;">"What's 17 * 24?"</span>}],
+)
+<span style="color:#7FD1FF;">print</span>(response.choices[0].message.content)
+
+<span style="color:#8A8A90;"># A fresh call with no history gets nothing back.</span>
+<span style="color:#8A8A90;"># Memory is something WE build, not something</span>
+<span style="color:#8A8A90;"># the model has natively.</span></pre>
+  </div>
+</section>
+
+<!-- ====================== SECTION 02: SCAFFOLDING =================== -->
+<section data-label="02 Scaffolding" data-speaker-notes="Emphasize: nothing on this slide executes anything yet. It's just what the model will be shown next." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">tools_schema.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;">tools_schema = [{
+    <span style="color:#FF9E7D;">"type"</span>: <span style="color:#FF9E7D;">"function"</span>,
+    <span style="color:#FF9E7D;">"function"</span>: {
+        <span style="color:#FF9E7D;">"name"</span>: <span style="color:#FF9E7D;">"get_weather"</span>,
+        <span style="color:#FF9E7D;">"description"</span>: <span style="color:#FF9E7D;">"Get the current weather for a city."</span>,
+        <span style="color:#FF9E7D;">"parameters"</span>: {
+            <span style="color:#FF9E7D;">"type"</span>: <span style="color:#FF9E7D;">"object"</span>,
+            <span style="color:#FF9E7D;">"properties"</span>: {<span style="color:#FF9E7D;">"city"</span>: {<span style="color:#FF9E7D;">"type"</span>: <span style="color:#FF9E7D;">"string"</span>}},
+            <span style="color:#FF9E7D;">"required"</span>: [<span style="color:#FF9E7D;">"city"</span>],
+        },
+    },
+}]</pre>
+  </div>
+  <div style="flex:0 0 640px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 02 &nbsp;·&nbsp; Scaffolding</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">Scaffolding is data, not a loop</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>The system prompt, tool schemas, and message list.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Shapes how the model sees the world and can act in it.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>If a tool's description is bad, the model will misuse it.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========================= SECTION 03: HARNESS ==================== -->
+<section data-label="03 Harness" data-speaker-notes="This is the pivot slide of the whole talk: scaffolding was inert, the harness is what actually does something with it." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:0 0 480px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 03 &nbsp;·&nbsp; Harness</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">The harness is what makes it run</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Calls the model, notices tool calls, executes real code.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Feeds results back into context, calls the model again.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Decides when the task is actually done. That's the loop.
+      </li>
+    </ul>
+  </div>
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">harness.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;"><span style="color:#F0B429;">for</span> turn <span style="color:#F0B429;">in</span> <span style="color:#7FD1FF;">range</span>(max_turns):
+    response = client.chat.completions.<span style="color:#7FD1FF;">create</span>(...)
+    msg = response.choices[0].message
+
+    <span style="color:#F0B429;">if</span> <span style="color:#F0B429;">not</span> msg.tool_calls:
+        <span style="color:#F0B429;">return</span> msg.content
+
+    <span style="color:#F0B429;">for</span> tc <span style="color:#F0B429;">in</span> msg.tool_calls:
+        result = AVAILABLE_TOOLS[tc.function.name](**args)
+        messages.append({<span style="color:#FF9E7D;">"role"</span>: <span style="color:#FF9E7D;">"tool"</span>, <span style="color:#FF9E7D;">"content"</span>: <span style="color:#7FD1FF;">str</span>(result)})</pre>
+  </div>
+</section>
+
+<!-- ========================= SECTION 04: AGENT ====================== -->
+<section data-label="04 Agent" data-speaker-notes="The thesis slide. Say it plainly: everything else in the talk is really just describing pieces of one of these two things, wrapped around a policy." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:160px;overflow:hidden;text-align:center;">
+  <div style="position:absolute;top:-280px;left:-240px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle at 40% 40%, rgba(253,184,19,0.20), rgba(234,51,35,0.08) 50%, transparent 72%);"></div>
+  <div style="font-size:24px;font-weight:600;letter-spacing:0.12em;color:#F0B429;text-transform:uppercase;margin-bottom:40px;">Section 04 &nbsp;·&nbsp; Agent</div>
+  <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:96px;line-height:1.2;color:#FFFFFF;max-width:1500px;margin:0 0 48px 0;">Agent = Model <span style="color:#EA3323;">+</span> Harness</p>
+  <div style="font-size:28px;color:#9A9AA0;max-width:1100px;line-height:1.5;">Pack a model and a harness into one class, working from the scaffolding you already built, and you have an agent.</div>
+</section>
+
+<!-- =================== SECTION 05: CONTEXT ENGINEERING ============== -->
+<section data-label="05 Context Engineering" data-speaker-notes="Live moment: instantiate a brand-new Agent and ask it what city was just discussed. It won't know — then show the same question working once memory is loaded from disk." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">memory.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;"><span style="color:#F0B429;">def</span> <span style="color:#7FD1FF;">save_memory</span>(fact: <span style="color:#7FD1FF;">str</span>):
+    facts = load_memory()
+    facts.append(fact)
+    json.dump(facts, <span style="color:#7FD1FF;">open</span>(MEMORY_FILE, <span style="color:#FF9E7D;">"w"</span>))
+
+prompt = SYSTEM_PROMPT + <span style="color:#FF9E7D;">"\n\nWhat you know:\n"</span> + (
+    <span style="color:#FF9E7D;">"\n"</span>.join(<span style="color:#FF9E7D;">f"- {f}"</span> <span style="color:#F0B429;">for</span> f <span style="color:#F0B429;">in</span> load_memory())
+)</pre>
+  </div>
+  <div style="flex:0 0 640px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 05 &nbsp;·&nbsp; Context Engineering</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">Deciding what enters the window</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Short-term memory: <code style="font-family:'JetBrains Mono',monospace;">messages</code> growing within one run.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Long-term memory: stored externally, retrieved on demand.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>A fresh agent has zero memory until you inject it back in.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========================= SECTION 06: POLICY ===================== -->
+<section data-label="06 Policy" data-speaker-notes="Run the terse vs verbose comparison live on an identical question, then bridge into thinking mode as another lever on the same idea — same weights, different scaffolding." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:0 0 640px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 06 &nbsp;·&nbsp; Policy</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">Same weights, different behavior</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Policy is the weights, plus the scaffolding and harness wrapped around them.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Swapping only the system prompt changes behavior completely.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Even "thinking mode" is a scaffolding switch, not a weights change.
+      </li>
+    </ul>
+  </div>
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">policy.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;">terse_agent = <span style="color:#7FD1FF;">Agent</span>(MODEL,
+    <span style="color:#FF9E7D;">"Answer in 5 words or fewer. No explanations."</span>,
+    tools_schema, AVAILABLE_TOOLS)
+
+think_agent = <span style="color:#7FD1FF;">Agent</span>(MODEL,
+    <span style="color:#FF9E7D;">"&lt;|think|&gt;\n"</span> + SYSTEM_PROMPT,
+    tools_schema, AVAILABLE_TOOLS)
+
+<span style="color:#8A8A90;"># Same model underneath both. Only the prompt differs.</span></pre>
+  </div>
+</section>
+
+<!-- ==================== SECTION 07: TOOL USE ========================= -->
+<section data-label="07 Tool Use" data-speaker-notes="Live: deliberately divide by zero and inspect error_agent.messages afterward. The whole request/response cycle becomes visible in one glance." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:0 0 800px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 07 &nbsp;·&nbsp; Tool Use</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">When tool calls fail</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Bad arguments, wrong types, tools that don't exist.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>The harness can feed the error back as a tool result.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>The model sees its own mistake and tries again, instead of crashing.
+      </li>
+    </ul>
+  </div>
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">error_handling.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;"><span style="color:#F0B429;">try</span>:
+    fn_args = json.loads(tool_call.function.arguments)
+    result = available_tools[fn_name](**fn_args)
+<span style="color:#F0B429;">except</span> <span style="color:#7FD1FF;">Exception</span> <span style="color:#F0B429;">as</span> e:
+    result = <span style="color:#FF9E7D;">f"Error: {e}"</span>
+
+messages.append({<span style="color:#FF9E7D;">"role"</span>: <span style="color:#FF9E7D;">"tool"</span>, <span style="color:#FF9E7D;">"content"</span>: <span style="color:#7FD1FF;">str</span>(result)})</pre>
+  </div>
+</section>
+
+<!-- ========================= SECTION 08: SKILLS ====================== -->
+<section data-label="08 Skills" data-speaker-notes="Contrast with tools directly: a tool runs code, a skill is text. Show one message that triggers it and one that doesn't." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;flex-direction:column;padding:100px 130px;gap:36px;overflow:hidden;">
+  <div>
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:16px;">Section 08 &nbsp;·&nbsp; Skills</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 32px 0;line-height:1.1;">Instructions, loaded only when needed</h2>
+    <div style="display:flex;gap:64px;">
+      <div style="flex:1;font-size:25px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>A skill is plain instructions. A tool is code that runs.
+      </div>
+      <div style="flex:1;font-size:25px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Stays out of the prompt until the user's message triggers it.
+      </div>
+      <div style="flex:1;font-size:25px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Keeps the base prompt lean instead of front-loading everything.
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:40px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">skills.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;">SKILLS = {<span style="color:#FF9E7D;">"trip_itinerary"</span>: {
+    <span style="color:#FF9E7D;">"trigger_words"</span>: [<span style="color:#FF9E7D;">"itinerary"</span>, <span style="color:#FF9E7D;">"day trip"</span>],
+    <span style="color:#FF9E7D;">"instructions"</span>: <span style="color:#FF9E7D;">"Format as 'Day N: &lt;plan&gt;'."</span>,
+}}
+
+<span style="color:#F0B429;">def</span> <span style="color:#7FD1FF;">build_system_prompt</span>(base, user_input, skills):
+    <span style="color:#F0B429;">for</span> skill <span style="color:#F0B429;">in</span> skills.values():
+        <span style="color:#F0B429;">if</span> <span style="color:#7FD1FF;">any</span>(w <span style="color:#F0B429;">in</span> user_input <span style="color:#F0B429;">for</span> w <span style="color:#F0B429;">in</span> skill[<span style="color:#FF9E7D;">"trigger_words"</span>]):
+            base += skill[<span style="color:#FF9E7D;">"instructions"</span>]
+    <span style="color:#F0B429;">return</span> base</pre>
+  </div>
+</section>
+
+<!-- ======================= SECTION 09: SUB-AGENTS ==================== -->
+<section data-label="09 Sub-agents" data-speaker-notes="Key line to land: from the orchestrator's harness, a tool call and a sub-agent call look identical. The difference is entirely on the inside." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">subagent.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;">packing_subagent = <span style="color:#7FD1FF;">Agent</span>(MODEL,
+    <span style="color:#FF9E7D;">"Given a weather description, give ONE packing tip."</span>,
+    tools_schema=[], available_tools={})
+
+<span style="color:#F0B429;">def</span> <span style="color:#7FD1FF;">delegate_to_packing_subagent</span>(weather_description):
+    <span style="color:#F0B429;">return</span> packing_subagent.run(weather_description)
+
+<span style="color:#8A8A90;"># The orchestrator calls this exactly like any other tool.</span></pre>
+  </div>
+  <div style="flex:0 0 640px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 09 &nbsp;·&nbsp; Sub-agents</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">A tool that thinks for itself</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>A full independent Agent, with its own messages, prompt, and harness loop.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Exposed to the orchestrator as if it were a plain tool.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>The orchestrator only ever sees its final answer, not its reasoning.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== SECTION 10: MULTIMODAL ====================== -->
+<section data-label="10 Multimodal Input" data-speaker-notes="Closing content slide. Tie it back to the running example: a real photo in, a real description out, feeding the packing sub-agent from section 9." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;padding:120px;gap:90px;overflow:hidden;">
+  <div style="flex:0 0 640px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:24px;font-weight:600;letter-spacing:0.1em;color:#F0B429;text-transform:uppercase;margin-bottom:20px;">Section 10 &nbsp;·&nbsp; Multimodal Input</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:56px;color:#FFFFFF;margin:0 0 36px 0;line-height:1.1;">Same model, richer input</h2>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px;">
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Gemma 4 accepts an image in the same message list as text.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#C7C7CC;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>Still one call to the same model, just with content as a list of parts.
+      </li>
+      <li style="font-size:26px;line-height:1.5;color:#FFFFFF;font-weight:600;padding-left:32px;position:relative;">
+        <span style="position:absolute;left:0;color:#6B6B74;">—</span>A real photo in, a real description out, feeding the next agent.
+      </li>
+    </ul>
+  </div>
+  <div style="flex:1;background:#151517;border:1px solid #262629;border-radius:16px;padding:44px 52px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:#9A9AA0;padding-bottom:16px;margin-bottom:20px;border-bottom:1px solid #262629;">multimodal.py</div>
+    <pre style="font-family:'JetBrains Mono',monospace;font-size:23px;line-height:1.75;color:#E4E4E7;margin:0;white-space:pre-wrap;">client.chat.completions.<span style="color:#7FD1FF;">create</span>(
+    model=MODEL,
+    messages=[{<span style="color:#FF9E7D;">"role"</span>: <span style="color:#FF9E7D;">"user"</span>, <span style="color:#FF9E7D;">"content"</span>: [
+        {<span style="color:#FF9E7D;">"type"</span>: <span style="color:#FF9E7D;">"text"</span>, <span style="color:#FF9E7D;">"text"</span>: <span style="color:#FF9E7D;">"Describe the weather."</span>},
+        {<span style="color:#FF9E7D;">"type"</span>: <span style="color:#FF9E7D;">"image_url"</span>, <span style="color:#FF9E7D;">"image_url"</span>: {<span style="color:#FF9E7D;">"url"</span>: photo}},
+    ]}],
+)</pre>
+  </div>
+</section>
+
+<!-- ============================= LINKS =============================== -->
+<section data-label="Links" data-speaker-notes="Give people time to actually scan/type this one — leave it up during Q&A too." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;flex-direction:column;justify-content:center;padding:140px;overflow:hidden;">
+  <div style="font-size:24px;font-weight:600;letter-spacing:0.12em;color:#F0B429;text-transform:uppercase;margin-bottom:24px;">Let's Connect</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:68px;color:#FFFFFF;margin:0 0 72px 0;">Keep building, keep in touch</h2>
+  <div style="display:flex;gap:120px;">
+    <div style="flex:1;">
+      <div style="font-size:22px;font-weight:600;letter-spacing:0.1em;color:#9A9AA0;text-transform:uppercase;margin-bottom:24px;">Notebook &amp; Code</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;color:#7FD1FF;margin-bottom:20px;word-break:break-all;">github.com/sitammeur</div>
+      <p style="font-size:24px;line-height:1.6;color:#C7C7CC;max-width:640px;margin:0;">Clone the workshop notebook, drop a free OpenRouter key into a <code style="font-family:'JetBrains Mono',monospace;">.env</code> file, and run it top to bottom.</p>
+    </div>
+    <div style="flex:1;border-left:1px solid #262629;padding-left:100px;">
+      <div style="font-size:22px;font-weight:600;letter-spacing:0.1em;color:#9A9AA0;text-transform:uppercase;margin-bottom:24px;">Connect With Me</div>
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <div style="font-size:28px;color:#FDB813;font-family:'JetBrains Mono',monospace;">linktr.ee/sitammeur</div>
+        <div style="font-size:26px;color:#E4E4E7;">LinkedIn &nbsp;<span style="color:#9A9AA0;font-family:'JetBrains Mono',monospace;font-size:24px;">linkedin.com/in/sitammeur</span></div>
+        <div style="font-size:26px;color:#E4E4E7;">X / Twitter &nbsp;<span style="color:#9A9AA0;font-family:'JetBrains Mono',monospace;font-size:24px;">x.com/sitammeur</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== REFERENCES ============================= -->
+<section data-label="References" data-speaker-notes="Further reading, framed as follow-up resources — not as the basis for this talk." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;flex-direction:column;padding:140px;overflow:hidden;">
+  <div style="font-size:24px;font-weight:600;letter-spacing:0.12em;color:#F0B429;text-transform:uppercase;margin-bottom:24px;">Further Reading</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:68px;color:#FFFFFF;margin:0 0 64px 0;">Where to go from here</h2>
+  <div style="display:flex;flex-direction:column;gap:0;flex:1;">
+    <div style="padding:20px 0;border-bottom:1px solid #1D1D20;">
+      <div style="font-size:28px;color:#E4E4E7;margin-bottom:8px;">Harness, Scaffold, and the AI Agent Terms Worth Getting Right</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#9A9AA0;">huggingface.co/blog/agent-glossary</div>
+    </div>
+    <div style="padding:20px 0;border-bottom:1px solid #1D1D20;">
+      <div style="font-size:28px;color:#E4E4E7;margin-bottom:8px;">Python Tiny Agents</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#9A9AA0;">huggingface.co/blog/python-tiny-agents</div>
+    </div>
+    <div style="padding:20px 0;border-bottom:1px solid #1D1D20;">
+      <div style="font-size:28px;color:#E4E4E7;margin-bottom:8px;">CrewAI docs</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#9A9AA0;">docs.crewai.com</div>
+    </div>
+    <div style="padding:20px 0;border-bottom:1px solid #1D1D20;">
+      <div style="font-size:28px;color:#E4E4E7;margin-bottom:8px;">LangGraph docs</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#9A9AA0;">langchain-ai.github.io/langgraph</div>
+    </div>
+    <div style="padding:20px 0;">
+      <div style="font-size:28px;color:#E4E4E7;margin-bottom:8px;">AutoGen docs</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#9A9AA0;">microsoft.github.io/autogen</div>
+    </div>
+  </div>
+  <p style="font-size:24px;color:#9A9AA0;margin:48px 0 0 0;max-width:1400px;">Good next step: rebuild one exercise from the notebook in CrewAI or LangGraph, and diff the code against what you wrote here.</p>
+</section>
+
+<!-- ============================ THANK YOU ============================= -->
+<section data-label="Thank You" data-speaker-notes="Closing slide. Leave up during Q&A alongside the Links slide if the room has questions." style="width:1920px;height:1080px;background:#0B0B0D;position:relative;display:flex;flex-direction:column;justify-content:center;padding:140px;overflow:hidden;">
+  <div style="position:absolute;top:-260px;left:-260px;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle at 65% 65%, rgba(253,184,19,0.24), rgba(234,51,35,0.08) 50%, transparent 72%);"></div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:104px;color:#FFFFFF;margin:0 0 72px 0;">Thank You</h2>
+  <div style="display:flex;align-items:center;gap:24px;">
+    <img src="uploads/speaker-photo.png" alt="Sitam Meur" style="width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+    <div>
+      <div style="font-size:30px;font-weight:600;color:#FFFFFF;">Sitam Meur</div>
+      <div style="font-size:24px;color:#9A9AA0;margin-top:6px;">AI Engineer @ Daily Dose of Data Science</div>
+      <div style="font-size:24px;color:#9A9AA0;">Organiser @ ML Kolkata &nbsp;·&nbsp; linktr.ee/sitammeur</div>
+    </div>
+  </div>
+</section>
+
+</x-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+}
+
+</script>
+</body>
+</html>
