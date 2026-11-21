@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Anatomy of an AI Agent</title>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+
+<!-- ============================== 01 TITLE ============================== -->
+<section class="slide bare" style="justify-content:center;padding-left:110px">
+  <div class="orb tr"></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:40px">
+    <img src="assets/ml-kolkata.jpeg" alt="ML Kolkata" style="width:38px;height:38px;border-radius:9px">
+    <span style="font:600 15px/1 var(--display);letter-spacing:.08em;color:var(--gold);text-transform:uppercase">ML Kolkata</span>
+  </div>
+  <div class="kicker" style="margin-bottom:22px">Hands-on workshop<span style="margin:0 10px;color:var(--dim)">·</span>Agentic AI Connect</div>
+  <h1>The Anatomy of<br>an AI Agent</h1>
+  <p style="font-size:22px;color:var(--text-3);margin-top:22px">Building one from scratch, live, in plain Python. No agent framework.</p>
+  <div style="display:flex;align-items:center;gap:16px;margin-top:44px">
+    <img src="assets/speaker.png" alt="" style="width:50px;height:50px;border-radius:50%;object-fit:cover">
+    <div>
+      <div style="font:600 18px/1.3 Inter;color:var(--text)">Sitam Meur</div>
+      <div style="font-size:15px;color:var(--muted);margin-top:3px">AI Engineer @ Daily Dose of Data Science<span style="margin:0 8px;color:var(--dim)">·</span>August 8, 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 02 SPEAKER ============================== -->
+<section class="slide bare" style="flex-direction:row;align-items:center;gap:80px;padding-left:130px">
+  <div class="orb br"></div>
+  <img src="assets/speaker.png" alt="Sitam Meur" style="width:250px;height:250px;border-radius:50%;object-fit:cover;flex-shrink:0">
+  <div>
+    <div class="eyebrow">Speaker</div>
+    <h2 style="font-size:60px">Sitam Meur</h2>
+    <div style="font-size:21px;color:var(--text-2);margin-top:20px">AI Engineer @ Daily Dose of Data Science</div>
+    <div style="font-size:18px;color:var(--muted);margin-top:8px">Organiser @ ML Kolkata<span style="margin:0 10px;color:var(--dim)">·</span>GSoC Mentor @ Uramaki Lab</div>
+    <div style="font-size:17px;color:var(--dim);margin-top:26px">Off duty: cheering for Real Madrid and Mohun Bagan.</div>
+  </div>
+</section>
+
+<!-- ============================== 03 THE GOAL ============================== -->
+<section class="slide">
+  <div class="eyebrow">The running example</div>
+  <h2>Maya flies to Tokyo in 3 days</h2>
+  <p class="lede">She wants one assistant for the whole trip. Every concept in this workshop exists because her assistant needs it, and the last section solves her actual request.</p>
+  <div class="cards c5" style="margin-top:40px">
+    <div class="card"><div class="num">01</div><h3>Check the forecast</h3><p>A real multi-day forecast for her dates, not today's reading.</p><span class="tag">get_weather</span></div>
+    <div class="card"><div class="num">02</div><h3>Plan each day</h3><p>A day-by-day itinerary that accounts for that weather.</p><span class="tag">trip_itinerary skill</span></div>
+    <div class="card"><div class="num">03</div><h3>Say what to pack</h3><p>Packing advice from a narrow specialist, not the main agent.</p><span class="tag">packing sub-agent</span></div>
+    <div class="card"><div class="num">04</div><h3>Budget in yen</h3><p>Her daily budget at today's exchange rate, currency stated.</p><span class="tag">convert_currency</span></div>
+    <div class="card"><div class="num">05</div><h3>Read a photo</h3><p>Look at a real photo of Tokyo and reason about it.</p><span class="tag">image input</span></div>
+  </div>
+  <div style="margin-top:36px;display:flex;gap:44px;align-items:baseline">
+    <div class="kicker" style="font-size:12px;color:var(--dim)">Real tools, all free and keyless</div>
+    <div class="note"><b>Open-Meteo</b> forecasts<span style="margin:0 10px;color:var(--dim)">·</span><b>Frankfurter</b> exchange rates<span style="margin:0 10px;color:var(--dim)">·</span><b>Wikimedia Commons</b> photos</div>
+  </div>
+  <p class="foot">The only credential you need is a free OpenRouter key.</p>
+</section>
+
+<!-- ============================== 04 AGENDA ============================== -->
+<section class="slide" style="flex-direction:row;gap:0;padding-top:0;padding-bottom:0;align-items:stretch">
+  <div style="flex:0 0 420px;display:flex;flex-direction:column;justify-content:center;padding-right:48px;border-right:1px solid var(--line)">
+    <div class="eyebrow">Before we start</div>
+    <h2>What you'll walk<br>out with</h2>
+    <p class="lede" style="font-size:16.5px;margin-top:22px">An agent you wrote yourself: one class, about 40 lines of Python.</p>
+    <p class="lede" style="font-size:16.5px;margin-top:12px">Then each term frameworks throw at you, built once by hand, so <code>Agent()</code> in CrewAI or LangGraph stops looking like magic.</p>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;padding-left:64px">
+    <div>
+      <div class="eyebrow" style="margin-bottom:12px">Part 1<span class="sep">·</span>From model to agent</div>
+      <div class="cards c4" style="gap:10px">
+        <div class="agenda-item"><span>01</span>Model</div><div class="agenda-item"><span>02</span>Scaffolding</div>
+        <div class="agenda-item"><span>03</span>Harness</div><div class="agenda-item"><span>04</span>Agent</div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow" style="margin-bottom:12px">Part 2<span class="sep">·</span>Shaping what it knows and does</div>
+      <div class="cards c4" style="gap:10px">
+        <div class="agenda-item"><span>05</span>Context engineering</div><div class="agenda-item"><span>06</span>Policy</div>
+        <div class="agenda-item"><span>6b</span>Reasoning</div><div class="agenda-item"><span>07</span>Tool use</div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow" style="margin-bottom:12px">Part 3<span class="sep">·</span>Composing bigger agents</div>
+      <div class="cards c4" style="gap:10px">
+        <div class="agenda-item"><span>08</span>Skills</div><div class="agenda-item"><span>09</span>Sub-agents</div>
+        <div class="agenda-item"><span>10</span>Multimodal input</div><div class="agenda-item hi"><span>11</span>Capstone</div>
+      </div>
+    </div>
+    <p class="note">Numbers match the notebook sections, so you can follow along cell by cell.</p>
+  </div>
+</section>
+
+<!-- ============================== 05 SETUP / MODEL CHOICE ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 00<span class="sep">·</span>Setup</div>
+  <h2>The model under the harness: Gemma 4</h2>
+  <p class="lede">A harness is only as reliable as the model it drives. We use Google's open Gemma 4 through OpenRouter's free endpoint, with the plain OpenAI client.</p>
+  <div class="body">
+    <div class="code sm" style="flex:0 0 560px">
+      <div class="file"><span>setup</span><span>§0</span></div>
+<pre data-py>from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.environ["OPENROUTER_API_KEY"],
+)
+
+# override with MODEL=... in .env, no code changes
+MODEL = os.environ.get("MODEL", "google/gemma-4-26b-a4b-it:free")
+
+# no agent framework past this line</pre>
+    </div>
+    <div class="grow cards c2" style="gap:14px">
+      <div class="card"><div class="num">01 · SECTION 03</div><h3>Reliable tool calls</h3><p>Trained for agentic work, so its <code>tool_calls</code> come out well-formed and consistent.</p></div>
+      <div class="card"><div class="num">02 · SECTION 02</div><h3>A real system role</h3><p>Earlier Gemma folded instructions into the first user turn. Gemma 4 takes <code>system</code> directly.</p></div>
+      <div class="card"><div class="num">03 · SECTION 6b</div><h3>Thinking on request</h3><p>A thinking token in the system prompt, switched per call by OpenRouter's <code>reasoning</code> parameter.</p></div>
+      <div class="card"><div class="num">04 · SECTION 10</div><h3>Image input</h3><p>Takes a photo alongside text in the same message, so one model covers it.</p></div>
+    </div>
+  </div>
+  <p class="foot">The free endpoint is often rate-limited (429). Same model, paid: <code>google/gemma-4-26b-a4b-it</code>, well under 1¢ per full run. Free fallback: <code>nvidia/nemotron-3.5-super-vl:free</code>.</p>
+</section>
+
+<!-- ============================== PART 1 ============================== -->
+<section class="slide bare" style="justify-content:center;padding-left:110px">
+  <div class="orb br"></div>
+  <div class="eyebrow" style="font-size:15px">Part 1</div>
+  <h1 style="font-size:68px">From model to agent</h1>
+  <p style="font-size:21px;color:var(--text-3);margin-top:18px">Start with a bare model call. Add one layer at a time until it runs on its own.</p>
+  <div style="display:flex;gap:12px;margin-top:40px;font:500 15px/1 var(--mono);color:var(--muted)">
+    <span class="pill">Model</span><span class="arrow">→</span><span class="pill">Scaffolding</span><span class="arrow">→</span><span class="pill">Harness</span><span class="arrow">→</span><span class="pill hi">Agent</span>
+  </div>
+</section>
+
+<!-- ============================== S01 MODEL ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 01<span class="sep">·</span>Model</div>
+  <h2>The model is not the agent</h2>
+  <p class="lede">Text in, text out, one response per prompt. Everything that makes it feel like an agent is code we write around it.</p>
+  <div class="body">
+    <div class="code grow">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§1</span></div>
+<pre data-py># One prompt in, one response out.
+response = client.chat.completions.create(
+    model=MODEL,
+    messages=[{"role": "user", "content": "What's 17 * 24?"}],
+)                                        # → 17 * 24 = 408
+
+# A fresh call, no history included
+messages=[{"role": "user", "content": "What number did I just ask you to compute?"}]
+                                         # → "You haven't asked me to compute any numbers yet ..."
+
+# Offer a tool schema: it can only DESCRIBE the call
+response = client.chat.completions.create(model=MODEL, messages=..., tools=tools)
+response.choices[0].message.tool_calls  # → get_weather({"city": "Paris"}). Nothing ran.</pre>
+    </div>
+    <div class="col-side points">
+      <div class="pt"><h3>No memory</h3><p>Each call is stateless. Unless we send the history back, it has none.</p></div>
+      <div class="pt"><h3>No loop</h3><p>It answers once and stops. Nothing keeps it running.</p></div>
+      <div class="pt"><h3>No hands</h3><p>It can express the <em>intent</em> to call a tool, but it can't act on it.</p></div>
+    </div>
+  </div>
+  <p class="foot">Outputs shown are from the saved notebook run. Anything that feels like memory in a chatbot is something <b>we</b> build.</p>
+</section>
+
+<!-- ============================== S02 SCAFFOLDING ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 02<span class="sep">·</span>Scaffolding</div>
+  <h2>Scaffolding is data, not a loop</h2>
+  <p class="lede">The system prompt, the tool schemas, and the message list. It shapes how the model sees the world, but nothing here runs anything yet.</p>
+  <div class="body">
+    <div class="code grow xs">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§2</span></div>
+<pre data-py>tools_schema = [{
+    "type": "function",
+    "function": {
+        "name": "get_weather",
+        "description": "Get current weather for a city. Pass forecast_days > 1 to also get "
+                       "that many days of daily forecast, e.g. forecast_days=3 for a 3-day trip.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string", "description": "City name, e.g. 'Tokyo'"},
+                "forecast_days": {"type": "integer", "description": "How many days of forecast"},
+            },
+            "required": ["city"],
+        },
+    },
+}, ...]                                  # + convert_currency
+
+SYSTEM_PROMPT = "You are a helpful travel assistant with access to tools. ..."
+AVAILABLE_TOOLS = {"get_weather": get_weather, "convert_currency": convert_currency}
+messages = [{"role": "system", "content": SYSTEM_PROMPT}]</pre>
+    </div>
+    <div class="col-side points">
+      <div class="pt"><h3>The schema is all it sees</h3><p>The model never reads your Python. It only reads the name, description, and parameters.</p></div>
+      <div class="pt"><h3>Bad description, bad call</h3><p>A vague description is the most common reason a model misuses a tool.</p></div>
+      <div class="pt"><h3>Name → function</h3><p><code>AVAILABLE_TOOLS</code> maps the string the model returns to the code that will run.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== S03 HARNESS ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 03<span class="sep">·</span>Harness</div>
+  <h2>The harness is what makes it run</h2>
+  <p class="lede">It calls the model, runs the tools the model asked for, feeds the results back, and decides when the task is done.</p>
+  <div class="body">
+    <div class="code grow sm">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§3</span></div>
+<pre data-py>def run_harness(messages, tools_schema, available_tools, max_turns=6):
+    for turn in range(max_turns):
+        response = client.chat.completions.create(
+            model=MODEL, messages=messages, tools=tools_schema)
+        msg = response.choices[0].message
+        messages.append(msg.model_dump(exclude_unset=True))
+
+        if not msg.tool_calls:            # stop: a plain-text answer
+            return messages, msg.content
+
+        for tool_call in msg.tool_calls:  # otherwise run every call
+            fn_name = tool_call.function.name
+            fn_args = json.loads(tool_call.function.arguments)
+            result = available_tools[fn_name](**fn_args)
+            messages.append({"role": "tool", "tool_call_id": tool_call.id,
+                             "name": fn_name, "content": str(result)})
+
+    return messages, "[Stopped: max turns reached without a final answer]"</pre>
+    </div>
+    <div class="col-side">
+      <div class="harness-flow">
+        <div class="hf-box">Call the model</div>
+        <div class="hf-arrow">↓</div>
+        <div class="hf-box q">Any <code>tool_calls</code>?</div>
+        <div class="hf-split">
+          <div><div class="hf-lbl">no</div><div class="hf-box done">Return the text</div></div>
+          <div><div class="hf-lbl">yes</div><div class="hf-box">Run each tool in Python</div><div class="hf-arrow">↓</div><div class="hf-box">Append a <code>"tool"</code> message</div><div class="hf-back">↺ loop again</div></div>
+        </div>
+        <div class="hf-guard"><code>max_turns</code> is the safety stop</div>
+      </div>
+    </div>
+  </div>
+  <p class="foot">The notebook also wraps the tool call in <code>try/except</code>. That one line matters in section 07.</p>
+</section>
+
+<!-- ============================== S03b HARNESS TRACE ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 03<span class="sep">·</span>Harness, one round trip</div>
+  <h2>What actually goes over the wire</h2>
+  <p class="lede">One user message, two tool calls in one turn, two real API results, one final answer. This is the saved run from the notebook.</p>
+  <div class="body" style="margin-top:30px">
+    <div class="tx grow">
+      <div class="file">messages, in order</div>
+      <div class="row"><span class="role">system</span><span>You are a helpful travel assistant with access to tools. …</span></div>
+      <div class="row"><span class="role user">user</span><span>What's the weather in Tokyo, and separately, convert $500 to Japanese yen?</span></div>
+      <div class="row"><span class="role assistant">assistant</span><span class="call">get_weather({"city": "Tokyo"})<br>convert_currency({"amount": 500, "from_currency": "USD", "to_currency": "JPY"})</span></div>
+      <div class="row"><span class="role tool">tool</span><span>Now: 4.5C, clear sky.</span></div>
+      <div class="row"><span class="role tool">tool</span><span>500 USD = 79322 JPY</span></div>
+      <div class="row"><span class="role assistant">assistant</span><span style="color:var(--text)">The current weather in Tokyo is 4.5°C with clear skies. Also, $500 is approximately 79,322 JPY.</span></div>
+    </div>
+    <div class="col-side points" style="flex-basis:320px">
+      <div class="pt"><h3>The model asked</h3><p>The <span class="gold">assistant</span> turn holds only requests. No weather was fetched by the model.</p></div>
+      <div class="pt"><h3>Python answered</h3><p>Each <span class="mint">tool</span> message carries the <code>tool_call_id</code> it answers.</p></div>
+      <div class="pt"><h3>The model finished</h3><p>No more <code>tool_calls</code>, so the harness stops and returns the text.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== S04 AGENT ============================== -->
+<section class="slide" style="align-items:center;text-align:center">
+  <div class="orb tl"></div>
+  <div class="eyebrow" style="margin-top:22px">Section 04<span class="sep">·</span>Agent</div>
+  <h1 style="font-size:72px;margin-top:6px">Agent = Model <span class="red">+</span> Harness</h1>
+  <p class="lede" style="max-width:860px;margin-top:18px">Pack the model call and the loop into one class, working from the scaffolding you already built. That class is the agent.</p>
+  <div class="cards c3" style="margin-top:46px;width:100%;text-align:left">
+    <div class="card"><div class="num">MODEL</div><h3>Reasons</h3><p>One stateless call to Gemma 4.</p><span class="tag">client.chat.completions.create()</span></div>
+    <div class="card"><div class="num">SCAFFOLDING</div><h3>Shapes what it sees</h3><p>System prompt, tool schemas, the running message list.</p><span class="tag">self.messages · tools_schema</span></div>
+    <div class="card hi"><div class="num">HARNESS</div><h3>Makes it act</h3><p>Calls, executes, feeds back, stops.</p><span class="tag">Agent.run() loop</span></div>
+  </div>
+  <div class="code" style="margin-top:22px;width:100%;text-align:left;padding:14px 26px">
+<pre data-py style="font-size:14px">agent = Agent(model=MODEL, system_prompt=SYSTEM_PROMPT, tools_schema=tools_schema, available_tools=AVAILABLE_TOOLS)
+agent.run("What's the weather in Bengaluru?")   # → The current weather in Bengaluru is 19.6°C and partly cloudy.</pre>
+  </div>
+</section>
+
+<!-- ============================== PART 2 ============================== -->
+<section class="slide bare" style="justify-content:center;padding-left:110px">
+  <div class="orb br"></div>
+  <div class="eyebrow" style="font-size:15px">Part 2</div>
+  <h1 style="font-size:68px">Shaping what it knows<br>and how it behaves</h1>
+  <p style="font-size:21px;color:var(--text-3);margin-top:18px">Same model, same loop. What changes is what goes into the window, and what the harness does with errors.</p>
+</section>
+
+<!-- ============================== S05 CONTEXT ENGINEERING ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 05<span class="sep">·</span>Context engineering</div>
+  <h2>Deciding what enters the window</h2>
+  <p class="lede">The model only knows what is in this call's messages. Memory is a choice about what to put there.</p>
+  <div class="cards c2" style="margin-top:28px">
+    <div class="card"><div class="num">SHORT-TERM</div><h3><code>self.messages</code>, inside one run</h3><p>A second <code>agent.run()</code> sees the first: <em>"You just asked about Bengaluru."</em> A <b style="color:var(--text-2)">new</b> <code>Agent</code> sees nothing: <em>"You haven't asked about a city in our current conversation yet."</em></p></div>
+    <div class="card hi"><div class="num">LONG-TERM</div><h3>Stored outside, injected back in</h3><p>Facts live in <code>long_term_memory.json</code>. Before the run, we load them and add them to the system prompt. A fresh agent now answers: <em>"Your favorite city is Tokyo…"</em></p></div>
+  </div>
+  <div class="code sm" style="margin-top:18px">
+    <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§5</span></div>
+<pre data-py>def save_memory(fact: str):
+    facts = load_memory()
+    facts.append(fact)
+    with open(MEMORY_FILE, "w") as f:
+        json.dump(facts, f)
+
+system_prompt_with_memory = (SYSTEM_PROMPT + "\n\nThings you know about this user from past sessions:\n"
+                             + "\n".join(f"- {fact}" for fact in load_memory()))
+another_fresh_agent = Agent(MODEL, system_prompt_with_memory, tools_schema, AVAILABLE_TOOLS)</pre>
+  </div>
+  <p class="foot">Re-run the save cell and the fact is stored twice. Real memory systems need dedupe and retrieval, not just append.</p>
+</section>
+
+<!-- ============================== S06 POLICY ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 06<span class="sep">·</span>Policy</div>
+  <h2>Same weights, different behavior</h2>
+  <p class="lede">A policy is the behavior an agent follows. Part of it lives in the weights; the rest comes from the scaffolding and harness wrapped around them.</p>
+  <div class="body">
+    <div class="grow" style="display:flex;flex-direction:column;gap:16px">
+      <div class="code sm">
+        <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§6</span></div>
+<pre data-py>terse_agent = Agent(model=MODEL,
+    system_prompt="You are a terse assistant. Answer in 5 words or fewer. No explanations.",
+    tools_schema=tools_schema, available_tools=AVAILABLE_TOOLS)
+
+verbose_agent = Agent(model=MODEL,
+    system_prompt="You are a thorough, friendly assistant. Always explain your reasoning ...",
+    tools_schema=tools_schema, available_tools=AVAILABLE_TOOLS)</pre>
+      </div>
+      <div class="tx">
+        <div class="file">"Should I bring an umbrella in Paris today?"  ·  both called get_weather → 8.5C, overcast</div>
+        <div class="row" style="grid-template-columns:120px 1fr"><span class="role assistant">terse_agent</span><span>No, it's just overcast.</span></div>
+        <div class="row" style="grid-template-columns:120px 1fr"><span class="role assistant">verbose_agent</span><span>To give you the best advice, I checked the current weather for Paris. Right now, it is 8.5°C and overcast. … Because the weather can be unpredictable when it's cloudy, I would recommend bringing an umbrella just to be safe …</span></div>
+      </div>
+    </div>
+    <div class="col-side points">
+      <div class="pt"><h3>One line changed</h3><p>Same model, same tools, same harness, same weather data. Only the system prompt differs.</p></div>
+      <div class="pt"><h3>Policy ≠ weights</h3><p>Part of the behavior is learned in training. A lot of what feels like personality is scaffolding.</p></div>
+      <div class="pt"><h3>Policy ≠ agent</h3><p>The agent is the machinery. The policy is how that machinery ends up behaving.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== S06b REASONING ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section <span style="text-transform:none">6b</span><span class="sep">·</span>Reasoning</div>
+  <h2>Thinking is a switch in the request</h2>
+  <p class="lede">Same weights. Gemma 4 thinks when a <code>&lt;|think|&gt;</code> token opens the system prompt; OpenRouter's <code>reasoning</code> parameter adds it for you, per call.</p>
+  <div class="body">
+    <div class="code grow">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§6b</span></div>
+<pre data-py># inside Agent.run(): an OpenRouter field, so it rides in extra_body
+if self.reasoning:
+    kwargs["extra_body"] = {"reasoning": self.reasoning}
+
+# "off" is explicit: some models think by default
+no_think_agent = Agent(..., reasoning={"enabled": False})
+think_agent    = Agent(..., reasoning={"enabled": True})
+
+no_think_agent.run(reasoning_question)   # → 40   (no trace)
+think_agent.run(reasoning_question)      # → 40
+
+think_agent.last_reasoning   # the trace: message.reasoning,
+                             # a separate field from .content</pre>
+    </div>
+    <div class="col-side points">
+      <div class="pt"><h3>It costs something</h3><p>More output tokens and more latency on every call that has it on.</p></div>
+      <div class="pt"><h3>Worth it for some questions</h3><p>Here both got 40; the trace is the only difference. On harder problems, that trace is where accuracy comes from.</p></div>
+      <div class="pt"><h3>Showing it is a product call</h3><p>The trace arrives in its own field. The harness decides whether the user ever sees it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== S07 TOOL USE ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 07<span class="sep">·</span>Tool use</div>
+  <h2>When a tool call fails</h2>
+  <p class="lede">Bad arguments, unknown codes, a tool that doesn't exist. The harness turns the exception into a tool result, so the model reads its own mistake instead of crashing the run.</p>
+  <div class="body">
+    <div class="code sm" style="flex:0 0 540px">
+      <div class="file"><span>Agent.run(), the tool step</span><span>§4 · §7</span></div>
+<pre data-py>for tool_call in msg.tool_calls:
+    fn_name = tool_call.function.name
+    try:
+        fn_args = json.loads(tool_call.function.arguments)
+        result = self.available_tools[fn_name](**fn_args)
+    except Exception as e:
+        result = f"Error: {e}"   # errors become data
+
+    self.messages.append({
+        "role": "tool",
+        "tool_call_id": tool_call.id,
+        "name": fn_name,
+        "content": str(result),
+    })</pre>
+    </div>
+    <div class="tx grow">
+      <div class="file">error_agent.messages, saved run</div>
+      <div class="row"><span class="role user">user</span><span>Use convert_currency to convert 100 USD to the currency code XYZ. Tell me what happens.</span></div>
+      <div class="row"><span class="role assistant">assistant</span><span class="call">convert_currency({"from_currency":"USD", "to_currency":"XYZ", "amount":100})</span></div>
+      <div class="row"><span class="role err">tool</span><span style="color:var(--salmon)">Error: HTTP Error 404: Not Found</span></div>
+      <div class="row"><span class="role assistant">assistant</span><span style="color:var(--text)">The attempt to convert 100 USD to the currency code "XYZ" failed because "XYZ" is not a valid currency code, resulting in a 404 error.</span></div>
+    </div>
+  </div>
+  <p class="foot"><b>Harness engineering</b> is designing this layer: when to stop, how errors surface, and what the model gets to see.</p>
+</section>
+
+<!-- ============================== PART 3 ============================== -->
+<section class="slide bare" style="justify-content:center;padding-left:110px">
+  <div class="orb br"></div>
+  <div class="eyebrow" style="font-size:15px">Part 3</div>
+  <h1 style="font-size:68px">Composing bigger agents</h1>
+  <p style="font-size:21px;color:var(--text-3);margin-top:18px">Instructions on demand, agents inside agents, images as input. Then all of it on Maya's trip.</p>
+</section>
+
+<!-- ============================== S08 SKILLS ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 08<span class="sep">·</span>Skills</div>
+  <h2>Instructions, loaded only when needed</h2>
+  <p class="lede">A skill is reusable instructions, loaded on demand. A tool is code that runs. Version one is the simplest possible loader: a keyword router in Python.</p>
+  <div class="body">
+    <div class="code grow sm">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§8</span></div>
+<pre data-py>SKILLS = {
+    "trip_itinerary": {
+        "description": "Formatting rules for multi-day trip itineraries.",
+        "trigger_words": ["itinerary", "multi-day", "day trip", "day-by-day"],
+        "instructions": "... one line per day, in the form 'Day N: &lt;plan&gt;'.",
+    },
+    "budget_note": {
+        "description": "Rules for how to state amounts of money.",
+        "trigger_words": ["budget", "cost", "price", "currency"],
+        "instructions": "When money is discussed, always state the currency explicitly ...",
+    },
+}
+
+def build_system_prompt(base_prompt, user_input, skills):
+    prompt = base_prompt
+    for name, skill in skills.items():
+        if any(word in user_input.lower() for word in skill["trigger_words"]):
+            prompt += f"\n\n[Skill: {name}]\n{skill['instructions']}"
+    return prompt</pre>
+    </div>
+    <div class="col-side points">
+      <div class="pt"><h3>"Give me a 3 day itinerary"</h3><p>Matches <code>itinerary</code>. The prompt gains a <code>[Skill: trip_itinerary]</code> block.</p></div>
+      <div class="pt"><h3>"What's the weather in Tokyo?"</h3><p>No trigger matches. The prompt stays exactly the base prompt.</p></div>
+      <div class="pt"><h3>Predictable, but not judgement</h3><p>Python decides by keyword match. Real skill systems let the model decide. Next slide.</p></div>
+    </div>
+  </div>
+  <p class="foot">The <code>Agent</code> class doesn't change at all. <code>budget_note</code> pairs with <code>convert_currency</code>: the skill says how to phrase money, the tool supplies the number.</p>
+</section>
+
+<!-- ============================== S08b SKILLS, MODEL-DRIVEN ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 08<span class="sep">·</span>Skills, the way real systems do it</div>
+  <h2>Let the model decide which skill to load</h2>
+  <p class="lede">The prompt carries only each skill's name and one-line description. A <code>load_skill</code> tool returns the full instructions when the model asks. Cheap index, full text only when used.</p>
+  <div class="body">
+    <div class="code grow sm">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§8</span></div>
+<pre data-py>def load_skill(name: str) -> str:
+    """Return a skill's full instructions. The model calls this when it decides it needs them."""
+    if name not in SKILLS:
+        return f"No skill named {name!r}. Available: {', '.join(SKILLS)}"
+    return SKILLS[name]["instructions"]
+
+skill_index = "\n".join(f"- {name}: {skill['description']}" for name, skill in SKILLS.items())
+model_driven_prompt = (SYSTEM_PROMPT
+    + "\n\nSkills you can load with load_skill before answering, if relevant:\n" + skill_index)
+
+skill_choosing_agent = Agent(MODEL, model_driven_prompt,
+    tools_schema + [load_skill_schema], {**AVAILABLE_TOOLS, "load_skill": load_skill})
+skill_choosing_agent.run("Give me a 3 day itinerary for Tokyo.")</pre>
+    </div>
+    <div class="tx" style="flex:0 0 400px">
+      <div class="file">skill_choosing_agent.messages, saved run</div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role assistant">assistant</span><span class="call">load_skill({"name": "trip_itinerary"})</span></div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role tool">tool</span><span>When asked for a trip itinerary, format the answer as a numbered list, one line per day, in the form 'Day N: &lt;plan&gt;'. …</span></div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role assistant">assistant</span><span style="color:var(--text)">1. Day 1: Explore the historic Senso-ji Temple in Asakusa, walk through Ueno Park, …<br>2. Day 2: …<br>3. Day 3: …</span></div>
+    </div>
+  </div>
+  <p class="foot">This is progressive disclosure, as in Anthropic's Agent Skills. Same <code>Agent</code> class, one more tool: the model chooses, the harness executes.</p>
+</section>
+
+<!-- ============================== S09 SUB-AGENTS ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 09<span class="sep">·</span>Sub-agents</div>
+  <h2>A tool that thinks for itself</h2>
+  <p class="lede">A full, independent <code>Agent</code> with its own prompt, messages, and loop, handed to the orchestrator as if it were one more plain function.</p>
+  <div class="body">
+    <div class="code grow sm">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§9</span></div>
+<pre data-py>packing_subagent = Agent(model=MODEL,
+    system_prompt="You are a packing advice specialist. Given a weather description, "
+                  "respond with ONE short sentence of packing advice. Nothing else.",
+    tools_schema=[], available_tools={})
+
+def delegate_to_packing_subagent(weather_description: str) -> str:
+    return packing_subagent.run(weather_description)   # a whole harness loop
+
+orchestrator_tools = tools_schema + [delegate_schema]
+orchestrator_available_tools = {**AVAILABLE_TOOLS,
+    "delegate_to_packing_subagent": delegate_to_packing_subagent}
+orchestrator = Agent(MODEL, SYSTEM_PROMPT, orchestrator_tools, orchestrator_available_tools)</pre>
+    </div>
+    <div class="tx" style="flex:0 0 400px">
+      <div class="file">orchestrator.messages, saved run</div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role assistant">assistant</span><span class="call">get_weather({"city":"New York"})</span></div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role tool">tool</span><span>Now: 14.5C, overcast.</span></div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role assistant">assistant</span><span class="call">delegate_to_packing_subagent( {"weather_description": "overcast and 14.5C"})</span></div>
+      <div class="row" style="grid-template-columns:72px 1fr"><span class="role tool">tool</span><span>Pack a lightweight waterproof jacket and layers to stay warm and dry.</span></div>
+    </div>
+  </div>
+  <p class="foot">To the orchestrator, both calls look identical. A tool just runs code; a sub-agent reasons on its own first. The orchestrator only ever sees its final answer.</p>
+</section>
+
+<!-- ============================== S10 MULTIMODAL ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 10<span class="sep">·</span>Multimodal input</div>
+  <h2>Same model, richer input</h2>
+  <p class="lede">Gemma 4 takes an image in the same message list as text. <code>content</code> becomes a list of parts. Still one call to the same model.</p>
+  <div class="body">
+    <div class="code grow">
+      <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§10</span></div>
+<pre data-py>reference_photo = find_reference_photo("Tokyo street scene")  # Wikimedia → data URI
+
+vision_response = client.chat.completions.create(
+    model=MODEL,
+    messages=[{"role": "user", "content": [
+        {"type": "text", "text": "Describe the weather and conditions visible ..."},
+        {"type": "image_url", "image_url": {"url": reference_photo}},
+    ]}],
+)
+photo_description = vision_response.choices[0].message.content
+packing_subagent.run(photo_description)   # reuse the section 09 sub-agent</pre>
+    </div>
+  </div>
+  <div class="chain">
+    <div class="link"><div class="k">real photo</div><div class="v">Tokyo, from Wikimedia Commons</div></div>
+    <div class="arr">→</div>
+    <div class="link"><div class="k">vision call</div><div class="v">"A clear night sky hangs over the brightly lit, sprawling cityscape of Tokyo."</div></div>
+    <div class="arr">→</div>
+    <div class="link hi"><div class="k">packing sub-agent</div><div class="v">"Wear comfortable walking shoes to explore the city streets."</div></div>
+  </div>
+</section>
+
+<!-- ============================== S11 CAPSTONE ============================== -->
+<section class="slide">
+  <div class="eyebrow">Section 11<span class="sep">·</span>Capstone</div>
+  <h2>Solving Maya's Tokyo trip</h2>
+  <p class="lede">Every tool, both skills, and the sub-agent, on the request from the start. Nothing new gets wired up here.</p>
+  <div class="body" style="gap:28px">
+    <div class="grow" style="display:flex;flex-direction:column;gap:14px">
+      <div class="code xs">
+        <div class="file"><span>anatomy-of-ai-agent.ipynb</span><span>§11</span></div>
+<pre data-py>capstone_request = (
+    "I'm flying to Tokyo in 3 days for work. Give me a day-by-day itinerary for the trip "
+    "accounting for the weather, tell me what to pack, and convert my daily budget of "
+    "$600 to Japanese yen.")
+
+maya_prompt = build_system_prompt(SYSTEM_PROMPT, capstone_request, SKILLS)
+maya_agent = Agent(MODEL, maya_prompt, orchestrator_tools,
+                   orchestrator_available_tools, max_turns=8)
+maya_agent.run(capstone_request)</pre>
+      </div>
+      <div class="tx" style="gap:7px">
+        <div class="file">maya_agent.messages, saved run</div>
+        <div class="row" style="font-size:12px"><span class="role">system</span><span>base prompt + <span class="gold">[Skill: trip_itinerary]</span> + <span class="gold">[Skill: budget_note]</span></span></div>
+        <div class="row" style="font-size:12px"><span class="role assistant">assistant</span><span class="call">get_weather({"city":"Tokyo","forecast_days":3})  ·  convert_currency({…,"amount":600})</span></div>
+        <div class="row" style="font-size:12px"><span class="role tool">tool</span><span>3-day forecast: clear, clear, rain on 11-24  ·  600 USD = 95187 JPY</span></div>
+        <div class="row" style="font-size:12px"><span class="role assistant">assistant</span><span class="call">delegate_to_packing_subagent({"weather_description": "Mostly clear and chilly …"})</span></div>
+        <div class="row" style="font-size:12px"><span class="role assistant">assistant</span><span style="color:var(--salmon)">None   ← empty reply, no tool calls</span></div>
+        <div class="row" style="font-size:12px"><span class="role user">user</span><span>Please give your final answer now.   <span style="color:var(--dim)">← added by the harness</span></span></div>
+      </div>
+    </div>
+    <div class="answer" style="flex:0 0 400px">
+      <div class="file">final answer</div>
+      <p class="h" style="margin-top:0">Itinerary</p>
+      <p>Day 1: Explore Tokyo's clear, chilly streets and enjoy outdoor landmarks.</p>
+      <p>Day 2: Visit shrines and gardens while enjoying the mostly clear weather.</p>
+      <p>Day 3: Stick to indoor activities or museums due to predicted rain.</p>
+      <p class="h">Packing advice</p>
+      <p>Pack warm layers to handle the chilly temperatures and a waterproof jacket for the rain.</p>
+      <p class="h">Budget</p>
+      <p>Your daily budget is <b>95,187 JPY</b>.</p>
+    </div>
+  </div>
+  <p class="foot">The harness caught an empty reply instead of returning <code>None</code> as the answer. Deciding when a task is really done is the harness's job.</p>
+</section>
+
+<!-- ============================== RECAP ============================== -->
+<section class="slide">
+  <div class="eyebrow">Recap</div>
+  <h2>Every term, and what you built for it</h2>
+  <table class="map" style="margin-top:26px">
+    <tr><th></th><th>Term</th><th>What you built</th></tr>
+    <tr><td class="sec">01</td><td>Model</td><td>A raw <code>client.chat.completions.create()</code> call. Stateless, no loop.</td></tr>
+    <tr><td class="sec">02</td><td>Scaffolding</td><td><code>SYSTEM_PROMPT</code>, <code>tools_schema</code>, <code>AVAILABLE_TOOLS</code>, the <code>messages</code> list.</td></tr>
+    <tr><td class="sec">03</td><td>Harness</td><td>The <code>for</code> loop: call, execute, feed back, stop.</td></tr>
+    <tr><td class="sec">04</td><td>Agent</td><td>The <code>Agent</code> class: Model plus Harness, working from Scaffolding.</td></tr>
+    <tr><td class="sec">05</td><td>Context engineering</td><td><code>self.messages</code> (short-term) vs <code>long_term_memory.json</code> (long-term).</td></tr>
+    <tr><td class="sec">06</td><td>Policy · Reasoning</td><td>Same weights, different <code>system_prompt</code>. <code>reasoning={"enabled": True / False}</code> switches the thinking token.</td></tr>
+    <tr><td class="sec">07</td><td>Tool use</td><td>A 404 from <code>convert_currency</code>, handed back to the model as a tool result.</td></tr>
+    <tr><td class="sec">08</td><td>Skills</td><td><code>trip_itinerary</code> and <code>budget_note</code>: a keyword router, then a <code>load_skill</code> tool the model calls itself.</td></tr>
+    <tr><td class="sec">09</td><td>Sub-agents</td><td><code>packing_subagent</code>, a full <code>Agent</code> exposed to the orchestrator as a tool.</td></tr>
+    <tr><td class="sec">10</td><td>Multimodal input</td><td>A text-plus-image message to the same model.</td></tr>
+    <tr><td class="sec">11</td><td>Capstone</td><td><code>maya_agent</code>: every tool, both skills, and the sub-agent on the real request.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== FRAMEWORKS ============================== -->
+<section class="slide">
+  <div class="eyebrow">Where to go from here</div>
+  <h2>Now read a framework's source</h2>
+  <p class="lede">CrewAI, LangGraph, and Microsoft Agent Framework do what you just did, with retries, streaming, observability, and parallelism handled for you. Their <code>Agent()</code> should now read as familiar parts.</p>
+  <div class="body" style="gap:56px;margin-top:34px">
+    <div class="grow">
+      <div class="kicker" style="font-size:12px;margin-bottom:16px">Three next steps</div>
+      <div class="points">
+        <div class="pt"><h3><span class="red mono" style="font-size:13px;margin-right:10px">01</span>Rebuild one section in a framework</h3><p>Do it in CrewAI or LangGraph, then diff the code against yours. Find their harness's stop condition.</p></div>
+        <div class="pt"><h3><span class="red mono" style="font-size:13px;margin-right:10px">02</span>Swap the model</h3><p>Set <code>MODEL</code> to <code>google/gemma-4-31b-it:free</code> or a larger paid model. Watch tool selection get more reliable.</p></div>
+        <div class="pt"><h3><span class="red mono" style="font-size:13px;margin-right:10px">03</span>Add a tool your trip needs</h3><p>Flight status, hotel search, a packing list saved to long-term memory. It slots into the same pattern.</p></div>
+      </div>
+    </div>
+    <div style="flex:0 0 470px">
+      <div class="kicker" style="font-size:12px;margin-bottom:16px">Further reading</div>
+      <div class="reading">
+        <div><h3>Harness, Scaffold, and the AI Agent Terms Worth Getting Right</h3><span>huggingface.co/blog/agent-glossary</span></div>
+        <div><h3>Python Tiny Agents</h3><span>huggingface.co/blog/python-tiny-agents</span></div>
+        <div><h3>CrewAI docs</h3><span>docs.crewai.com</span></div>
+        <div><h3>LangGraph docs</h3><span>docs.langchain.com/oss/python/langgraph</span></div>
+        <div><h3>Microsoft Agent Framework (AutoGen's successor)</h3><span>learn.microsoft.com/agent-framework</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CONNECT ============================== -->
+<section class="slide bare" style="justify-content:center;padding-left:110px;padding-right:110px">
+  <div class="orb tr"></div>
+  <div class="eyebrow">Let's connect</div>
+  <h2 style="font-size:52px">Keep building, keep in touch</h2>
+  <div style="display:flex;gap:0;margin-top:52px;align-items:stretch">
+    <div style="flex:1;padding-right:56px;border-right:1px solid var(--line)">
+      <div class="kicker" style="font-size:12px;margin-bottom:18px">Scan for the notebook</div>
+      <div style="display:flex;gap:28px;align-items:center">
+        <div style="background:#fff;border-radius:12px;padding:8px;flex-shrink:0"><img src="assets/qr-colab.svg" alt="QR code to the Colab notebook" style="width:150px;height:150px;display:block"></div>
+        <div>
+          <div style="font:500 19px/1 var(--mono);color:var(--gold)">Open in Colab</div>
+          <p class="note" style="font-size:15px;margin-top:12px;max-width:340px">Add <code>OPENROUTER_API_KEY</code> as a Colab secret and run top to bottom. No local setup.</p>
+          <p class="note" style="font-size:14px;margin-top:12px">Source: <span class="mono" style="color:var(--text-2)">github.com/sitammeur/anatomy-of-ai-agent</span></p>
+        </div>
+      </div>
+    </div>
+    <div style="flex:0 0 420px;padding-left:56px">
+      <div class="kicker" style="font-size:12px;margin-bottom:18px">Connect with me</div>
+      <div style="font:500 21px/1 var(--mono);color:var(--gold)">linktr.ee/sitammeur</div>
+      <div style="margin-top:22px;display:grid;grid-template-columns:110px 1fr;row-gap:12px;font-size:15px">
+        <span style="color:var(--text-2)">LinkedIn</span><span class="mono" style="color:var(--muted)">linkedin.com/in/sitammeur</span>
+        <span style="color:var(--text-2)">X / Twitter</span><span class="mono" style="color:var(--muted)">x.com/sitammeur</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== THANK YOU ============================== -->
+<section class="slide bare" style="justify-content:center;padding-left:110px">
+  <div class="orb tl" style="top:auto;bottom:-420px;left:auto;right:-200px;width:1000px;height:1000px"></div>
+  <h1 style="font-size:104px;color:#F6E7CF">Thank You</h1>
+  <p style="font:500 22px/1 var(--mono);color:var(--muted);margin-top:26px">Agent = Model <span class="red">+</span> Harness</p>
+  <div style="display:flex;align-items:center;gap:16px;margin-top:56px">
+    <img src="assets/speaker.png" alt="" style="width:50px;height:50px;border-radius:50%;object-fit:cover">
+    <div>
+      <div style="font:600 18px/1.3 Inter;color:var(--text)">Sitam Meur</div>
+      <div style="font-size:15px;color:var(--muted);margin-top:3px">AI Engineer @ Daily Dose of Data Science<span style="margin:0 8px;color:var(--dim)">·</span>Organiser @ ML Kolkata<span style="margin:0 8px;color:var(--dim)">·</span>linktr.ee/sitammeur</div>
+    </div>
+  </div>
+</section>
+
+<script src="deck.js"></script>
+</body>
+</html>

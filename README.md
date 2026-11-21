@@ -25,8 +25,8 @@ what she's packed or what Tokyo looks like right now.
 
 Every term in this notebook exists because Maya's assistant needs it. A single-day
 weather reading can't answer a multi-day packing question, so `get_weather` grows into
-a real forecast call. A travel assistant has no use for arbitrary arithmetic, so a
-generic `calculate` tool gets built and then deleted once it's made its point. By the
+a real forecast call. Maya's budget has to be in yen, so a currency tool joins it, and a
+skill tells the model how to state money. By the
 capstone at the end, every tool and skill you wrote comes together to actually solve
 her trip, not a simplified stand-in for it.
 
@@ -46,7 +46,7 @@ her trip, not a simplified stand-in for it.
 | 6 | Policy | Same weights, different system prompt, different behavior — "personality" turns out to be scaffolding, not training |
 | 6b | Reasoning | Some questions are worth the extra latency of step-by-step thinking; most aren't |
 | 7 | Tool use | What the harness does when a real API call fails mid-conversation |
-| 8 | Skills | Instructions that only enter the prompt when they're relevant, instead of bloating every system prompt |
+| 8 | Skills | Instructions that only enter the prompt when they're relevant: first via a simple keyword router, then the way real skill systems do it, with the model loading the skill itself |
 | 9 | Sub-agents | One narrow job — turning a weather description into packing advice — delegated to an agent built just for it |
 | 10 | Multimodal input | Some of what Maya needs isn't text: a photo of what Tokyo looks like right now |
 | 11 | Capstone | Every tool, both skills, and the sub-agent, solving the actual trip |
@@ -72,10 +72,19 @@ as input alongside text. Four separate sections in this notebook lean on one of 
 properties directly. A second free variant, `google/gemma-4-31b-it:free`, is also
 available on OpenRouter if you want to compare.
 
+The free Gemma 4 endpoint has a single upstream provider and is often rate-limited
+(HTTP 429). You can switch models without touching code by adding a `MODEL` line to `.env`:
+
+| `MODEL=` | When to use it |
+|---|---|
+| `google/gemma-4-26b-a4b-it:free` | Default. Free, but can be busy |
+| `google/gemma-4-26b-a4b-it` | Same Gemma 4, paid. A full run of the notebook costs well under one US cent. Use this for live demos |
+| `nvidia/nemotron-3.5-super-vl:free` | Free fallback with tool calling, image input, and switchable reasoning |
+
 The tools Maya's assistant calls are real, not mocked, and all free and keyless:
 
 - **Weather** — [Open-Meteo](https://open-meteo.com) forecast API
-- **Currency** — [Frankfurter](https://www.frankfurter.app) exchange-rate API
+- **Currency** — [Frankfurter](https://frankfurter.dev) exchange-rate API
 - **Image** — a real photo pulled from Wikimedia Commons
 
 Your OpenRouter key is the only credential the notebook needs.
@@ -117,8 +126,9 @@ uv run jupyter lab anatomy-of-ai-agent.ipynb
 Run the cells top to bottom. Each section builds on the objects the previous one
 created, so skipping ahead will throw a `NameError` rather than a wrong answer.
 
-> **Note.** OpenRouter's free tier is rate-limited. If a cell errors with a 429, wait a
-> moment and re-run it.
+> **Note.** OpenRouter's free tier is rate-limited: 20 requests a minute per key, and the
+> free Gemma 4 endpoint is also limited upstream. If a cell errors with a 429, wait a
+> moment and re-run it, or set `MODEL` in `.env` as described above.
 
 ## What's in this repo
 
@@ -135,8 +145,7 @@ notebook covers on its own. A few ways to push past it:
 
 - Rebuild one exercise from this notebook using **CrewAI** or **LangGraph** and diff the
   code against what you wrote here.
-- Swap `google/gemma-4-26b-a4b-it:free` for `google/gemma-4-31b-it:free`, or a paid,
-  larger OpenRouter model, and see how much more reliable tool selection and reasoning
+- Set `MODEL` to `google/gemma-4-31b-it:free`, or a paid, larger OpenRouter model, and see how much more reliable tool selection and reasoning
   quality get as the model scales up.
 - Add a tool your own trip would actually need — flight status, hotel search, a packing
   checklist that persists to long-term memory — and watch it slot into the same
