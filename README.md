@@ -1,6 +1,6 @@
 # Anatomy of an AI Agent
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1UyDAnjQZ-TbFGpXoHYcc1ff3Pc0apFE6?usp=sharing)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1B0BjnSO6HGXR0W4phbf7oyP6x5bXTezY?usp=sharing)
 
 Most people learn what an agent is by importing one: install a framework, instantiate
 an `Agent` class, hand it some tools, watch it work. That teaches you the framework's
@@ -18,7 +18,7 @@ Sub-agents, Multimodal Input. Each concept is a cell you run, not a paragraph yo
 Explaining "context engineering" or "sub-agents" as abstract concepts makes them sound
 more complicated than they are. So this workshop grounds all eleven in one scenario:
 
-Maya is flying to Tokyo in 3 days for work. She wants one assistant that can check the
+Maya is flying to Tokyo for work in 3 days. She wants one assistant that can check the
 real multi-day forecast for her dates, turn that into a day-by-day itinerary, tell her
 what to pack, keep her daily budget straight in yen, and sanity-check a real photo of
 what she's packed or what Tokyo looks like right now.
@@ -92,8 +92,8 @@ Your OpenRouter key is the only credential the notebook needs.
 ## Setting up the workshop
 
 The fastest way to try this is the [Colab
-notebook](https://colab.research.google.com/drive/1UyDAnjQZ-TbFGpXoHYcc1ff3Pc0apFE6?usp=sharing) —
-no local setup at all, just add your OpenRouter key as a Colab secret (key icon in the
+notebook](https://colab.research.google.com/drive/1B0BjnSO6HGXR0W4phbf7oyP6x5bXTezY?usp=sharing) —
+no local setup at all; just add your OpenRouter key as a Colab secret (key icon in the
 sidebar, name it `OPENROUTER_API_KEY`) and run the cells. Running it locally instead
 gives you a persistent `long_term_memory.json` between sessions, which is the only
 thing the hosted version can't do.
