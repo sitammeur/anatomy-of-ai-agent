@@ -1,5 +1,31 @@
-// Tiny Python highlighter + slide chrome. Runs once before print.
+// Tiny Python highlighter + slide chrome + light/dark toggle. Runs once before print.
 (function () {
+  // theme: ?theme=light|dark overrides the saved choice (used by build.sh)
+  const root = document.documentElement;
+  const param = new URLSearchParams(location.search).get("theme");
+  let saved = null;
+  try { saved = localStorage.getItem("deck-theme"); } catch (e) {}
+  const setTheme = t => {
+    if (t === "light") root.dataset.theme = "light"; else delete root.dataset.theme;
+    try { localStorage.setItem("deck-theme", t); } catch (e) {}
+    if (btn) btn.textContent = t === "light" ? "☾ Dark" : "☀ Light";
+  };
+  let btn = null;
+  if (param) root.dataset.theme = param === "light" ? "light" : "";
+  else if (saved === "light") root.dataset.theme = "light";
+  if (!param) {
+    btn = document.createElement("button");
+    btn.className = "theme-toggle";
+    btn.title = "Toggle light/dark (T)";
+    const toggle = () => setTheme(root.dataset.theme === "light" ? "dark" : "light");
+    btn.addEventListener("click", toggle);
+    document.addEventListener("keydown", e => {
+      if ((e.key === "t" || e.key === "T") && !e.metaKey && !e.ctrlKey && !e.altKey) toggle();
+    });
+    document.body.appendChild(btn);
+    btn.textContent = root.dataset.theme === "light" ? "☾ Dark" : "☀ Light";
+  }
+
   const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const KW = new Set("from import def return for in if not else elif class try except as with and or is async await lambda while raise pass".split(" "));
   const CONST = new Set(["None", "True", "False"]);

@@ -26,6 +26,11 @@
   --blue: #7FD1FF;
   --salmon: #FF9E7D;
   --mint: #8FE3B0;
+  --page: #050506;
+  --chrome: #4A4A50;
+  --tok-kw: #F0B429; --tok-str: #FF9E7D; --tok-fn: #7FD1FF; --tok-com: #6E6E76; --tok-num: #C9A7FF;
+  --thanks: #F6E7CF;
+  --orb: 1;
   --mono: "JetBrains Mono", ui-monospace, monospace;
   --display: "Space Grotesk", Inter, sans-serif;
 }
@@ -42,10 +47,10 @@ body { font-family: Inter, sans-serif; color: var(--text-3); -webkit-font-smooth
   break-after: page; page-break-after: always;
 }
 .slide:last-child { break-after: auto; page-break-after: auto; }
-@media screen { body { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 0; background: #050506; } }
+@media screen { body { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 0; background: var(--page); } }
 
 /* decorative glow */
-.orb { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+.orb { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; opacity: var(--orb); }
 .orb.tr { top: -300px; right: -260px; width: 820px; height: 820px;
   background: radial-gradient(circle at 35% 60%, rgba(255,138,61,.26), rgba(234,51,35,.09) 45%, transparent 70%); }
 .orb.br { bottom: -380px; right: -300px; width: 820px; height: 820px;
@@ -81,8 +86,8 @@ code, .mono { font-family: var(--mono); font-size: .9em; color: var(--text-2); }
 .code.sm pre { font-size: 13px; line-height: 1.58; }
 .code.xs pre { font-size: 12px; line-height: 1.55; }
 .code.lg pre { font-size: 16px; line-height: 1.66; }
-.tok-kw { color: #F0B429; } .tok-str { color: #FF9E7D; } .tok-fn { color: #7FD1FF; }
-.tok-com { color: #6E6E76; } .tok-num { color: #C9A7FF; } .tok-bi { color: #7FD1FF; }
+.tok-kw { color: var(--tok-kw); } .tok-str { color: var(--tok-str); } .tok-fn { color: var(--tok-fn); }
+.tok-com { color: var(--tok-com); } .tok-num { color: var(--tok-num); } .tok-bi { color: var(--tok-fn); }
 .code pre .hl { background: rgba(240,180,41,.10); box-shadow: -8px 0 0 rgba(240,180,41,.10), 8px 0 0 rgba(240,180,41,.10); border-radius: 2px; }
 
 /* transcript */
@@ -116,7 +121,7 @@ code, .mono { font-family: var(--mono); font-size: .9em; color: var(--text-2); }
 .card.hi h3 { color: var(--gold); }
 
 /* footer chrome */
-.chrome { position: absolute; left: 80px; right: 80px; bottom: 26px; display: flex; justify-content: space-between; font: 400 11.5px/1 var(--mono); color: #4A4A50; z-index: 2; }
+.chrome { position: absolute; left: 80px; right: 80px; bottom: 26px; display: flex; justify-content: space-between; font: 400 11.5px/1 var(--mono); color: var(--chrome); z-index: 2; }
 
 /* tables */
 table.map { width: 100%; border-collapse: collapse; }
@@ -171,3 +176,39 @@ table.map td.sec { font: 500 12px/1.4 var(--mono); color: var(--red); width: 44p
 /* fixes from review pass 1 */
 .slide > .chrome { position: absolute; }
 code, .mono, .code pre, .tx, .tag, .file { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+
+/* light theme — toggle with the button or the "T" key */
+:root[data-theme="light"] {
+  --bg: #FBF8F3;
+  --panel: #FFFFFF;
+  --panel-2: #F5F1EA;
+  --line: #E4DDD2;
+  --line-soft: #EEE8DF;
+  --text: #16161A;
+  --text-2: #2A2A30;
+  --text-3: #3E3E46;
+  --muted: #62626B;
+  --dim: #8A8A92;
+  --gold: #A8680A;
+  --red: #C8281A;
+  --orange: #D9601C;
+  --blue: #0A6AA6;
+  --salmon: #C04A22;
+  --mint: #14804A;
+  --page: #E7E3DC;
+  --chrome: #A09A90;
+  --tok-kw: #A8680A; --tok-str: #B5401C; --tok-fn: #0A6AA6; --tok-com: #9A958C; --tok-num: #7A4CC2;
+  --thanks: #A8680A;
+  --orb: .7;
+}
+:root[data-theme="light"] .slide { box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 8px 30px rgba(0,0,0,.06); }
+:root[data-theme="light"] .code pre .hl { background: rgba(240,180,41,.18); box-shadow: -8px 0 0 rgba(240,180,41,.18), 8px 0 0 rgba(240,180,41,.18); }
+
+.theme-toggle {
+  position: fixed; top: 16px; right: 16px; z-index: 100;
+  font: 500 13px/1 Inter, sans-serif; color: var(--text-2);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 14px; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.theme-toggle:hover { border-color: var(--gold); color: var(--gold); }
+@media print { .theme-toggle { display: none; } }
